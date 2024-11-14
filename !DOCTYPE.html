@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My ChatGPT Website</title>
+</head>
+<body>
+    <h1>Ask ChatGPT</h1>
+    <textarea id="userInput" rows="4" cols="50" placeholder="Type your question here..."></textarea><br>
+    <button onclick="sendMessage()">Ask ChatGPT</button>
+    <p id="response"></p>
+
+    <script>
+        async function sendMessage() {
+            const userMessage = document.getElementById('userInput').value;
+            const responseElement = document.getElementById('response');
+            
+            // Replace 'YOUR_API_KEY' with your actual API key
+            const apiKey = "YOUR_API_KEY";
+            const apiUrl = "https://api.openai.com/v1/chat/completions";
+
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            };
+
+            const body = JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: userMessage }]
+            });
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: headers,
+                    body: body
+                });
+                
+                const data = await response.json();
+                responseElement.textContent = data.choices[0].message.content;
+            } catch (error) {
+                responseElement.textContent = "Error: Could not fetch response.";
+            }
+        }
+    </script>
+</body>
+</html>
